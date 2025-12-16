@@ -235,6 +235,76 @@
             opacity: 1;
             transform: translate(-50%, -50%) scale(1);
         }
+
+        /* 弹窗样式 */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 100;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .modal-overlay.show {
+            display: flex;
+        }
+        .modal-box {
+            background: #fff;
+            border-radius: 16px;
+            padding: 28px 24px;
+            width: 100%;
+            max-width: 300px;
+            text-align: center;
+        }
+        .modal-icon {
+            margin-bottom: 16px;
+        }
+        .modal-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1a1a2e;
+            margin-bottom: 8px;
+        }
+        .modal-desc {
+            font-size: 14px;
+            color: #6b7280;
+            margin-bottom: 16px;
+        }
+        .modal-name {
+            background: #f3f4f6;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            color: #27ae60;
+            margin-bottom: 20px;
+        }
+        .modal-btns {
+            display: flex;
+            gap: 12px;
+        }
+        .modal-btn {
+            flex: 1;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 500;
+            border: none;
+            cursor: pointer;
+        }
+        .modal-btn.cancel {
+            background: #f3f4f6;
+            color: #6b7280;
+        }
+        .modal-btn.confirm {
+            background: #27ae60;
+            color: #fff;
+        }
     </style>
 </head>
 <body>
@@ -323,42 +393,64 @@
         </footer>
     </div>
 
+    <!-- 弹窗 -->
+    <div class="modal-overlay" id="modal">
+        <div class="modal-box">
+            <div class="modal-icon">
+                <svg viewBox="0 0 24 24" fill="#27ae60" width="40" height="40">
+                    <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
+                </svg>
+            </div>
+            <div class="modal-title">全域检察e站</div>
+            <div class="modal-desc">请打开微信，搜索小程序名称进入</div>
+            <div class="modal-name">全域检察e站</div>
+            <div class="modal-btns">
+                <button class="modal-btn cancel" onclick="closeModal()">关闭</button>
+                <button class="modal-btn confirm" onclick="copyName()">复制名称</button>
+            </div>
+        </div>
+    </div>
+
     <div class="toast" id="toast"></div>
 
     <script>
-        // 检测是否在微信环境
-        function isWechat() {
-            return /MicroMessenger/i.test(navigator.userAgent);
+        function openMiniProgram() {
+            document.getElementById('modal').classList.add('show');
         }
 
-        // 显示提示
-        function showToast(msg, duration = 2000) {
+        function closeModal() {
+            document.getElementById('modal').classList.remove('show');
+        }
+
+        function copyName() {
+            const name = '全域检察e站';
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(name).then(() => {
+                    showToast('已复制，请在微信中搜索打开');
+                    setTimeout(closeModal, 1000);
+                });
+            } else {
+                const input = document.createElement('input');
+                input.value = name;
+                document.body.appendChild(input);
+                input.select();
+                document.execCommand('copy');
+                document.body.removeChild(input);
+                showToast('已复制，请在微信中搜索打开');
+                setTimeout(closeModal, 1000);
+            }
+        }
+
+        function showToast(msg) {
             const toast = document.getElementById('toast');
             toast.textContent = msg;
             toast.classList.add('show');
-            setTimeout(() => {
-                toast.classList.remove('show');
-            }, duration);
+            setTimeout(() => toast.classList.remove('show'), 2500);
         }
 
-        // 打开小程序
-        function openMiniProgram() {
-            // 使用加密URL Scheme（ticket来自小程序短链接）
-            const schemeUrl = 'weixin://dl/business/?t=rojqALGgLEJjv2d';
-            
-            if (isWechat()) {
-                // 微信内，直接跳转
-                window.location.href = schemeUrl;
-            } else {
-                // 微信外，尝试跳转
-                showToast('正在打开微信...', 1500);
-                window.location.href = schemeUrl;
-                
-                setTimeout(() => {
-                    showToast('请在微信中扫码打开', 2500);
-                }, 2500);
-            }
-        }
+        document.getElementById('modal').addEventListener('click', function(e) {
+            if (e.target === this) closeModal();
+        });
     </script>
 </body>
 </html>
