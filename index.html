@@ -25,7 +25,7 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background-image: 
+            background-image:
                 radial-gradient(circle at 20% 20%, rgba(255,255,255,0.1) 0%, transparent 50%),
                 radial-gradient(circle at 80% 80%, rgba(255,255,255,0.08) 0%, transparent 40%);
             pointer-events: none;
@@ -236,7 +236,7 @@
             transform: translate(-50%, -50%) scale(1);
         }
 
-        /* 弹窗样式 */
+        /* 弹窗样式（保留不影响，但按钮3已不用弹窗） */
         .modal-overlay {
             display: none;
             position: fixed;
@@ -366,8 +366,8 @@
                 </div>
             </a>
 
-            <!-- 按钮3：全域检察e站（小程序） -->
-            <button class="service-btn" onclick="openMiniProgram()">
+            <!-- ✅ 按钮3：全域检察e站（改为和别人一样的直链跳转） -->
+            <a href="https://qyjcez.hzjcy.gov.cn/web/#/jumpPage" class="service-btn" target="_blank" rel="noopener noreferrer">
                 <div class="btn-icon icon-3">
                     <svg viewBox="0 0 24 24" fill="white">
                         <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
@@ -382,7 +382,7 @@
                         <path d="M9 18l6-6-6-6"/>
                     </svg>
                 </div>
-            </button>
+            </a>
         </div>
 
         <footer class="footer">
@@ -393,7 +393,7 @@
         </footer>
     </div>
 
-    <!-- 弹窗 -->
+    <!-- 弹窗（可保留不影响；按钮3不再触发它） -->
     <div class="modal-overlay" id="modal">
         <div class="modal-box">
             <div class="modal-icon">
